@@ -5,11 +5,20 @@ class Automato:
         self.estados = estados
         self.transicoes = transicoes
 
-def reconhecer(palavra, index, estado, automato):
-    if index == len(string) - 1:
-        return estado in automato.es_finais
-    
+def reconhecerPalavra(automato, palavra, estado, indice = 0):
+    # if estado == "":
+    #     estado = automato.es_inicial
 
+    if indice == len(palavra) - 1:
+        return estado in automato.es_finais
+
+    aceito = False
+
+    for transicao in automato.transicoes:
+        if transicao[0] == estado and transicao[1] == palavra[indice]:
+            if reconhecerPalavra(automato, palavra, transicao[2], indice + 1):
+                aceito = True
+    return aceito
 
 arq_entrada = []                    # Cria uma lista para armazenar as linhas do arquivo
 file = open("entrada.txt", "r")     # Abre o arquivo de entrada em modo leitura
@@ -29,6 +38,9 @@ for line in file:                   # Percorre as linhas do arquivo
     palavras.append(line.replace('\n', ''))  # Armazena as linhas do arquivo na lista de palavras, removendo '\n' se houver
 file.close()                        # Fecha o arquivo
 
+print(afnd.transicoes)
+print(palavras)
+
 aceito = []                         # Cria uma lista para armazenar se as palavras são aceitas pelo automato
 for palavra in palavras:            # Percorre a lista de palavras
-    
+    print(reconhecerPalavra(afnd, palavra, afnd.es_inicial))
